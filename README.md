@@ -1,65 +1,108 @@
-# Ink & Trouble
+# Ink & Trouble — The Inkwell Isles
 
-**A little mayhem in three acts.** An original, single-player cartoon boss-rush for the browser, inspired by vintage animation and precision arcade combat.
+An original vintage-cartoon action campaign: **15 stages, three islands, six weapons, and one very determined little pen.**
 
-Play as Pip, a fountain-pen nib with more courage than common sense. Face Rootsy the Radish in the garden, Baron Bubbles at the harbor, and Madame Moth at the midnight show. Each fight escalates through three phases.
+Travel through Bramble Borough, Brinewater Bay, and Midnight Midway. Follow branching trails on the world map, tackle nine ground bosses and three aerial bosses, and collect coins in three scrolling run-and-gun stages. Each boss escalates through three attack phases.
 
-## Run locally
+## Play locally
 
-Requires Node.js 22 or newer. No dependencies or installation required.
+Requires Node.js 22 or newer. No package installation needed.
 
 ```sh
 npm start
 ```
 
-Open **http://localhost:4173**. Choose an act and a difficulty, then select **Let's make trouble**.
+Open **http://localhost:4173**. Select a map node, choose Gentle or Regular, and enter the stage. The two starting weapons are Inkshot and Scatter; you start with four coins to spend at **Ink & Co.**
 
 ## Controls
 
 | Action | Keyboard |
 | --- | --- |
-| Move | Left / Right arrows or A / D |
-| Jump | Space, W, or Up arrow; release for a shorter hop |
-| Shoot | Hold Z or J; aims toward the boss |
-| Dash | X or Shift; briefly invulnerable, with a cooldown |
-| Parry | C or K while airborne and touching a pink projectile |
-| Special | V or L when all five ink cards are full |
+| Move / fly | Arrow keys or WASD (W/S aim vertically in flight) |
+| Jump | Space; release early for a short hop |
+| Aim up / diagonally | Hold Up or W; combine with Left/Right |
+| Shoot | Hold Z or J; Pressure Pen fires on release |
+| Switch equipped weapon | Q or E |
+| Dash | X or Shift; brief protection and a cooldown |
+| Parry pink projectiles | C or K while airborne, or while flying |
+| Weapon EX attack | F; costs one ink card |
+| Equipped super | V or L; costs five ink cards |
 | Pause | Escape or P |
 | Retry after defeat | R |
+| Map selection | Click a node, or use arrows and Enter |
 
-Touch buttons appear on touch devices. Landscape orientation is recommended. Enable sound in the top bar for synthesized music and effects. Motion can be reduced using the adjacent button; the initial setting respects your system preference. Best grades and times save locally, separately for each act and difficulty.
+In boss fights, horizontal shots face the boss. In run-and-gun stages they follow your facing direction. Parrying and hitting enemies build ink. Touch devices get simultaneous-action buttons; landscape is recommended. Fullscreen, sound, and reduced-motion controls are available.
 
-**Gentle:** six hearts and slower attacks. **Regular:** three hearts. All acts are available immediately. Defeat all three on the same difficulty for the curtain-call message.
+## Weapons, equipment, and rewards
+
+Equip **two weapons**, **one charm**, and **one super** in Loadout. Changes apply when entering or restarting a stage; switching with Q/E during a fight swaps the two weapons you brought.
+
+| Weapon | Behavior | Cost |
+| --- | --- | --- |
+| Inkshot | Fast, reliable long-range shots | Starter |
+| Scatter | Five strong close-range pellets | Starter |
+| Firefly | Lower-damage homing sparks | 4 coins |
+| Blot Bomb | Heavy arcing, bouncing ink bombs | 4 coins |
+| Roundabout | Shots reverse and return | 4 coins |
+| Pressure Pen | Hold, charge, and release a heavy blast | 5 coins |
+
+Every weapon also has a distinct one-card EX variant. Charms offer an extra heart with a damage tradeoff, passive ink recharge, or faster dash recovery. The first super is a piercing beam; clearing islands I and II unlocks an invulnerability super and a homing inkstorm.
+
+First clears award **two coins**. Run-and-gun stages contain **five additional coins each**, banked only when you reach the exit. Collected coins and first-clear rewards cannot be farmed by replaying stages or changing difficulty.
+
+Clear the four opening stages on an island to unlock its gate boss. Defeat the gate boss to open the next island. Gentle has six hearts and slower boss projectiles; Regular has three. Either difficulty advances the campaign; grades and times are tracked separately.
+
+## The campaign
+
+| Island | Stage | Type |
+| --- | --- | --- |
+| Bramble Borough | The Root of All Trouble — Rootsy the Radish | Boss |
+| | Bramble Scramble | Run & gun |
+| | Out of the Woods — Tick Tock Timber | Boss |
+| | Clouds of Doubt — Captain Cumulus | Flight |
+| | A Royal Ribbit — King Croak | Gate boss |
+| Brinewater Bay | A Fishy Business — Baron Bubbles | Boss |
+| | Pier Pressure | Run & gun |
+| | Claws for Concern — Clack the Crustacean | Boss |
+| | Flight of the Fancy — Admiral Albatross | Flight |
+| | Deep Sea Encore — Maestro Inktopus | Gate boss |
+| Midnight Midway | The Midnight Flutter — Madame Moth | Boss |
+| | Backlot Dash | Run & gun |
+| | Burning the Midnight Oil — Cinderwick | Boss |
+| | Moonlight Mischief — Luna the Lantern | Flight |
+| | The Final Cut — The Projectionist | Final boss |
+
+Progress, coins, purchases, equipment, and best grades save to this browser. Existing v1 boss scores migrate automatically; the old save is retained. Saves belong to the current browser origin: localhost and a hosted site do not share progress.
 
 ## Development
 
 ```sh
-npm run check  # JavaScript syntax checks
-npm test       # Native Node engine tests
+npm run check  # Syntax-check all runtime modules
+npm test       # Engine and campaign tests
 npm run build  # Static site in dist/
 ```
 
-Preview the production build with `SERVE_DIST=1 npm start`. The game needs only static hosting; it has no backend, runtime third-party assets, tracking, or API keys.
+Use `SERVE_DIST=1 npm start` to preview the build. There are no runtime dependencies, external assets, trackers, backend services, or API keys.
 
-- `src/engine.js`: deterministic simulation, collision detection, patterns, grading, save validation.
-- `src/art.js`: original animated canvas illustrations and scenery.
-- `src/main.js`: menus, input, fixed-step game loop, persistence and accessibility labels.
+- `src/content.js`: worlds, stages, weapons, charms, super definitions.
+- `src/campaign.js`: progression, shop, equipment, save validation and migration.
+- `src/engine.js`: deterministic combat, flight, platforms, enemies, collisions and grading.
+- `src/art.js`: original animated canvas art and world maps.
+- `src/main.js`: menus, input, fixed-step loop, persistence and HUD.
 - `src/audio.js`: synthesized effects and original melody.
-- `tests/engine.test.js`: core gameplay regression checks.
-- [PLAN.md](PLAN.md): design, scope, milestones, acceptance criteria and expansion roadmap.
+- [PLAN.md](PLAN.md): milestones and scope.
+- [Testing report](docs/TESTING.md): evidence and verification limits.
 
 ## GitHub Pages
 
-The repository includes validation CI and an opt-in Pages deployment workflow. To publish the playable website:
+Source publication does not activate web hosting. An opt-in deployment workflow is included:
 
-1. In **Settings → Pages**, choose **GitHub Actions** as the source.
-2. In **Actions → Publish game to Pages**, select **Run workflow**.
-3. Use the deployment URL reported by the completed workflow.
+1. In **Settings → Pages**, select **GitHub Actions** as the source.
+2. In **Actions → Publish game to Pages**, run the workflow.
+3. Open the URL reported by the successful deployment.
 
-The expected project URL is `https://amartya-j.github.io/ink-and-trouble/` once Pages has been enabled and deployment succeeds. Repository publication alone does not enable this URL.
+## Scope and provenance
 
-## Scope and asset provenance
+This is an expanded original browser game inspired by precision action and vintage animation. It does **not** reproduce Cuphead’s exact levels, characters, music, or assets, and it is not feature-for-feature parity with that commercial game. This release is single-player with keyboard/touch controls; cooperative play and gamepad support are not included. Artwork is procedural vector animation rather than frame-by-frame cel animation.
 
-This is a complete small browser game, not a recreation of the full commercial Cuphead game. It has three boss arenas; it does not include cooperative multiplayer, gamepad controls, or run-and-gun levels. Characters, scenes, procedural vector artwork, code, and synthesized melody were created for this project. No Cuphead assets, characters, music, or branding are included.
-
-The canvas action requires visual play. Menus use native keyboard-accessible controls, but the combat itself is not screen-reader playable. Touch layout is provided; physical mobile-device playtesting is still recommended.
+Native controls support keyboard navigation, but visual combat is not screen-reader playable. Automated completion checks establish stage reachability with player invulnerability; broader human difficulty balancing and physical-device testing remain useful.

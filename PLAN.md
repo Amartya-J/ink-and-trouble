@@ -32,3 +32,17 @@ This is a small complete browser game, not the scale of the commercial Cuphead g
 - Touch precision: large buttons and landscape recommendation; keep keyboard as the primary experience.
 - Audio/browser storage restrictions: start audio on interaction and allow the game to continue if storage or audio is unavailable.
 - GitHub access: build and validate locally while repository setup is pending.
+
+## Campaign expansion — version 2
+
+The expansion replaces the three-act selector with a persistent island campaign. It contains 15 original stages, not copies of the commercial game's levels.
+
+1. **Content and progress:** three islands, five nodes per island, branching prerequisites, gate bosses, permanent coin rewards, completion grades by difficulty, and migration of v1 scores.
+2. **Arsenal:** six mechanically different weapons; two equipped slots; Q/E to switch in combat; one-card EX attacks; three five-card supers; three purchasable charms with explicit tradeoffs.
+3. **World navigation:** illustrated maps, keyboard/click selection, locked-route explanations, island tabs, completion flags, shop and loadout dialogs.
+4. **Stage variety:** nine ground bosses, three aerial bosses with four-direction flight, and three scrolling run-and-gun stages with platforms, enemies, pits, five coins, and an exit.
+5. **Presentation:** original boss silhouettes and phase changes, map scenery, aircraft, enemy variants, weapon colors, readable HUD and responsive controls.
+6. **Verification:** regression coverage plus weapon behavior, purchase/equip rules, one-time rewards, save migration/validation, route unlocks, flying movement, platform/pit collision, and all-level reachability. Browser-check the actual map → shop → loadout → level → pause flow.
+7. **Publish:** push the verified expansion and updated documentation to the existing GitHub repository. GitHub Pages deployment remains outside this change unless its pending authorization is granted.
+
+Completion requires real game logic for every listed stage, not placeholder level buttons. Full commercial-game parity, local cooperative play, and hand-drawn frame-by-frame animation are outside this release.
