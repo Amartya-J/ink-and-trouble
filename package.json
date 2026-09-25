@@ -1,0 +1,9 @@
+{
+  "name": "ink-and-trouble",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "An original vintage-cartoon browser boss rush",
+  "scripts": { "dev": "node scripts/server.mjs", "start": "node scripts/server.mjs", "test": "node --test", "build": "node scripts/build.mjs", "check": "node --check src/main.js && node --check src/art.js && node --check src/audio.js && node --check src/engine.js" },
+  "engines": { "node": ">=22" }
+}

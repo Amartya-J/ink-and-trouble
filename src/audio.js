@@ -1,0 +1,7 @@
+export class AudioBus{
+  constructor(){this.enabled=false;this.context=null;this.timer=null;this.note=0;}
+  async toggle(){this.enabled=!this.enabled;if(this.enabled){try{this.context??=new (window.AudioContext||window.webkitAudioContext)();await this.context.resume();this.timer=setInterval(()=>this.music(),230);}catch{this.enabled=false;}}else{clearInterval(this.timer);}return this.enabled;}
+  tone(freq,duration=.08,type='triangle',volume=.035){if(!this.enabled||!this.context||this.context.state!=='running')return;const ctx=this.context,osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,ctx.currentTime);gain.gain.setValueAtTime(volume,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+duration);}
+  music(){if(document.hidden)return;const melody=[330,392,440,392,523,440,392,294,330,392,494,440,392,330,294,262];const i=this.note++%melody.length;this.tone(melody[i],.14,'triangle',.018);if(i%2===0)this.tone([131,165,147,196][Math.floor(i/4)],.18,'sine',.035);}
+  play(event){const tones={shoot:[740,.035,'triangle',.014],jump:[390,.1],dash:[180,.08,'sawtooth',.017],hurt:[90,.2,'sawtooth',.045],parry:[990,.19,'sine',.06],special:[150,.3,'sawtooth',.04],phase:[220,.25],victory:[660,.5,'triangle',.06],defeat:[110,.6,'triangle',.04],begin:[440,.2]};if(tones[event])this.tone(...tones[event]);}
+}
