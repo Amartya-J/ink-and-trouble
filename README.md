@@ -106,3 +106,8 @@ Source publication does not activate web hosting. An opt-in deployment workflow 
 This is an expanded original browser game inspired by precision action and vintage animation. It does **not** reproduce Cuphead’s exact levels, characters, music, or assets, and it is not feature-for-feature parity with that commercial game. This release is single-player with keyboard/touch controls; cooperative play and gamepad support are not included. Artwork is procedural vector animation rather than frame-by-frame cel animation.
 
 Native controls support keyboard navigation, but visual combat is not screen-reader playable. Automated completion checks establish stage reachability with player invulnerability; broader human difficulty balancing and physical-device testing remain useful.
+
+### Precision controls
+Hold Down/S to duck on the ground. Hold Ctrl (AIM on touch) to stop moving and aim in eight directions. Press Jump again in the air to parry pink shots. Boss phase changes clear existing bullets and briefly delay attacks.
+
+Vercel configuration is included: `npm run build`, output `dist`. Deployment awaits account/team access.

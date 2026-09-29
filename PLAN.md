@@ -24,7 +24,7 @@ An original, single-player browser boss-rush inspired by the precision action an
 `src/engine.js` owns deterministic simulation and collision logic without DOM access. `src/art.js` owns canvas illustration. `src/main.js` bridges input, sound, persistence, menus, and rendering. `src/audio.js` synthesizes audio after a user gesture. Native Node test runner exercises the engine. A small Node server serves development files; the static build copies runtime files into `dist/`.
 
 ## Scope beyond this release
-This is a small complete browser game, not the scale of the commercial Cuphead game. Expansion order: player feedback and balancing → more hand-drawn animation frames → controller support and rebinding → run-and-gun stages → local cooperative play → additional worlds. Co-op requires explicit camera, input, revive, and difficulty design and is not included in this release.
+This is a small complete browser game, not the scale of the commercial Cuphead game. Expansion order: player feedback and balancing → more hand-drawn animation frames → keyboard rebinding → run-and-gun stages → local cooperative play → additional worlds. Co-op requires explicit camera, input, revive, and difficulty design and is not included in this release.
 
 ## Risks and mitigations
 - Procedural art can look rigid: animate limbs, squash/stretch, eyes, and background layers.
@@ -46,3 +46,9 @@ The expansion replaces the three-act selector with a persistent island campaign.
 7. **Publish:** push the verified expansion and updated documentation to the existing GitHub repository. GitHub Pages deployment remains outside this change unless its pending authorization is granted.
 
 Completion requires real game logic for every listed stage, not placeholder level buttons. Full commercial-game parity, local cooperative play, and hand-drawn frame-by-frame animation are outside this release.
+
+## Precision combat update
+- Duck with a smaller collision box, stationary eight-direction aim, and jump-button airborne parries.
+- Give phase changes a readable, projectile-free transition with squash/stretch and stars.
+- Show a marked progress track after defeat.
+- Verify hitboxes, parry timing, aim direction, transition protection, and existing campaign regressions; publish to GitHub. Vercel awaits an accessible team.

@@ -10,7 +10,7 @@ try{campaign=loadCampaign(localStorage.getItem(SAVE_KEY),localStorage.getItem('i
 let selected=campaign.selected,world=levelById(selected).world,game=createLevelGame(selected,campaign.difficulty,{...campaign,collected:campaign.collected[selected]}),screen='map';
 let input={},keys=new Set(),touches=new Map(),latched=new Set(),last=0,accumulator=0,shownResult=false,mapTime=0,storageOK=true,armoryMode='shop';
 let reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const bindings={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',Space:'jump',KeyZ:'shoot',KeyJ:'shoot',KeyX:'dash',ShiftLeft:'dash',ShiftRight:'dash',KeyC:'parry',KeyK:'parry',KeyV:'special',KeyL:'special',KeyF:'ex',KeyQ:'switch',KeyE:'switch'};
+const bindings={ControlLeft:'lock',ControlRight:'lock',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',Space:'jump',KeyZ:'shoot',KeyJ:'shoot',KeyX:'dash',ShiftLeft:'dash',ShiftRight:'dash',KeyC:'parry',KeyK:'parry',KeyV:'special',KeyL:'special',KeyF:'ex',KeyQ:'switch',KeyE:'switch'};
 const symbol={boss:'⚑',flight:'✈',run:'➜'};
 function syncInput(){input={};for(const code of keys)if(bindings[code])input[bindings[code]]=true;for(const action of touches.values())input[action]=true;for(const action of latched)input[action]=true;}
 function clearInput(){keys.clear();touches.clear();latched.clear();input={};}
@@ -77,7 +77,7 @@ function result(){
     setStatus(storageOK?(all?'All 15 stages cleared. Take a bow!':'Progress, rewards, and best performance saved.'):'Victory! Browser storage is unavailable; keep this page open to retain progress.');$('next').focus({preventScroll:true});
   }else{
     const progress=Math.round(game.type==='run'?game.player.x/game.worldWidth*100:(1-game.boss.hp/game.boss.maxHp)*100);
-    panel(`<p class="eyebrow">A TEMPORARY INK-CIDENT</p><h2>Down, but not out.</h2><p>${progress}% of the way there.<br>${game.type==='run'?'Watch the gaps. Jump from the very edge.':'Try a different loadout, or switch to Gentle.'}</p>${button('retry','ONE MORE TAKE →')}${button('quit','WORLD MAP','secondary-button')}<p class="menu-note">R TO RETRY · SHOP FOR A NEW STRATEGY</p>`,true);
+    panel(`<p class="eyebrow">A TEMPORARY INK-CIDENT</p><h2>Down, but not out.</h2><div class="attempt-track" role="progressbar" aria-label="Stage progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${progress}"><span style="width:${progress}%"></span><i style="left:${progress}%">✦</i></div><p>${progress}% of the way there.<br>${game.type==='run'?'Watch the gaps. Jump from the very edge.':'Try a different loadout, or switch to Gentle.'}</p>${button('retry','ONE MORE TAKE →')}${button('quit','WORLD MAP','secondary-button')}<p class="menu-note">R TO RETRY · SHOP FOR A NEW STRATEGY</p>`,true);
     $('retry').onclick=start;$('quit').onclick=showMap;setStatus('The show isn’t over. Try another take.');$('retry').focus({preventScroll:true});
   }
 }

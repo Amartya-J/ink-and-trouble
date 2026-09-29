@@ -11,7 +11,7 @@ export function createGame(act=0,difficulty='regular',options={}) {
   const loadout=Array.isArray(options.loadout)&&options.loadout.length===2&&options.loadout.every(id=>Object.hasOwn(WEAPONS,id))?[...options.loadout]:['inkshot','spread'];
   const flying=!!def.flying;
   return {
-    act,world:def.world,levelId:null,type:flying?'flight':'boss',difficulty:gentle?'gentle':'regular',mode:'intro',intro:2.4,time:0,elapsed:0,phase:0,attackIn:1.6,attackCount:0,warning:'',warningTime:0,shake:0,
+    act,world:def.world,levelId:null,type:flying?'flight':'boss',difficulty:gentle?'gentle':'regular',mode:'intro',intro:2.4,time:0,elapsed:0,phase:0,transition:0,attackIn:1.6,attackCount:0,warning:'',warningTime:0,shake:0,
     player:{x:140,y:flying?260:FLOOR-64,w:flying?48:34,h:flying?32:64,vx:0,vy:0,facing:1,hp:maxHp,maxHp,grounded:!flying,invuln:0,dash:0,dashCooldown:0,shootCooldown:0,parry:0,parryCooldown:0,ink:0,chargeTime:0,loadout,slot:0,charm,super:['shield','storm'].includes(options.super)?options.super:'blast',lastSafe:140},
     boss:{x:735,y:flying?170:238,w:160,h:210,hp:def.hp,maxHp:def.hp,flash:0},
     camera:0,worldWidth:WIDTH,platforms:[],ground:[],enemies:[],coins:[],collected:[],shots:[],hazards:[],particles:[],events:[],hits:0,parries:0,specials:0,seed:31+act,previous:{},
@@ -113,11 +113,11 @@ function addShot(g,id,x,y,angle,damage,extra={}){
 }
 function shoot(g,input,charged=0,ex=false){
   const p=g.player,id=p.loadout[p.slot],w=WEAPONS[id],target=nearest(g,p.x,p.y);
-  const dir=g.type==='run'?p.facing:target&&target.x<p.x?-1:1;
+  const dir=input.lock?p.facing:g.type==='run'?p.facing:target&&target.x<p.x?-1:1;
   let angle=dir===1?0:Math.PI;
   if(input.up)angle=(input.left||input.right)?(dir===1?-Math.PI/4:-Math.PI*3/4):-Math.PI/2;
-  else if(input.down&&g.type==='flight')angle=(input.left||input.right)?(dir===1?Math.PI/4:Math.PI*3/4):Math.PI/2;
-  const x=p.x+(dir===1?p.w:-20),y=p.y+(g.type==='flight'?12:24),mult=ex?4:1;
+  else if(input.down&&(g.type==='flight'||!p.grounded||input.lock))angle=(input.left||input.right)?(dir===1?Math.PI/4:Math.PI*3/4):Math.PI/2;
+  const x=p.x+(dir===1?p.w:-20),y=p.y+(g.type==='flight'?12:p.crouching?12:24),mult=ex?4:1;
   if(id==='spread'){for(let i=-2;i<=2;i++)addShot(g,id,x,y,angle+i*.19,w.damage*mult,{life:ex?.8:w.life,w:ex?26:13,h:ex?18:9,special:ex});}
   else if(id==='lobber')addShot(g,id,x,y,angle,w.damage*mult,{vy:-260,gravity:650,w:ex?42:22,h:ex?42:22,special:ex});
   else if(id==='seeker'){for(let i=0;i<(ex?3:1);i++)addShot(g,id,x,y+i*12,angle,w.damage*(ex?7:1),{homing:true,special:ex,w:ex?27:15,h:ex?22:11});}
@@ -135,13 +135,17 @@ function superAttack(g){
 function movePlayer(g,input,dt,pressed){
   const p=g.player,moving=(input.right?1:0)-(input.left?1:0),flying=g.type==='flight';
   if(moving&&p.dash<=0)p.facing=moving;
+  p.crouching=!!(input.down&&p.grounded&&!flying&&!input.lock&&p.dash<=0&&!input.jump);
+  const height=flying?32:p.crouching?36:64;p.y+=p.h-height;p.h=height;
+  p.aimLocked=!!input.lock;
+  const airborne=!p.grounded;
   if(pressed('jump')&&p.grounded&&!flying){p.vy=-640;p.grounded=false;event(g,'jump');}
   if(!input.jump&&g.previous.jump&&p.vy<-250&&!flying)p.vy=-250;
   if(pressed('dash')&&p.dashCooldown<=0){p.dash=.18;p.dashCooldown=p.charm==='dash'?.47:.72;event(g,'dash');burst(g,p.x,p.y+25,'#eee2c1',6);}
-  if(pressed('parry')&&(flying||!p.grounded)&&p.parryCooldown<=0){p.parry=.22;p.parryCooldown=.35;event(g,'parryTry');}
-  p.vx=p.dash>0?p.facing*780:moving*(flying?300:285);
+  if((pressed('parry')||(pressed('jump')&&airborne))&&(flying||!p.grounded)&&p.parryCooldown<=0){p.parry=.22;p.parryCooldown=.35;event(g,'parryTry');}
+  p.vx=p.dash>0?p.facing*780:(input.lock||p.crouching?0:moving)*(flying?300:285);
   const oldBottom=p.y+p.h;
-  if(flying){p.vy=((input.down?1:0)-(input.up?1:0))*300;p.grounded=false;}
+  if(flying){p.vy=input.lock?0:((input.down?1:0)-(input.up?1:0))*300;p.grounded=false;}
   else if(p.dash<=0)p.vy+=1700*dt;else p.vy=0;
   p.x=clamp(p.x+p.vx*dt,20,g.worldWidth-p.w-20);p.y+=p.vy*dt;
   if(flying)p.y=clamp(p.y,65,HEIGHT-p.h-35);
@@ -207,7 +211,7 @@ export function step(g,input={},dt=1/60){
   if(g.mode!=='playing')return;
   g.elapsed+=dt;const p=g.player,b=g.boss,pressed=k=>input[k]&&!g.previous[k];
   for(const key of ['invuln','dash','dashCooldown','shootCooldown','parry','parryCooldown'])p[key]=Math.max(0,p[key]-dt);
-  b.flash=Math.max(0,b.flash-dt);
+  b.flash=Math.max(0,b.flash-dt);g.transition=Math.max(0,g.transition-dt);
   if(p.charm==='coffee')p.ink=clamp(p.ink+dt*.12,0,5);
   if(pressed('switch')){p.slot=1-p.slot;p.chargeTime=0;event(g,'switch');}
   movePlayer(g,input,dt,pressed);
@@ -221,14 +225,14 @@ export function step(g,input={},dt=1/60){
   if(pressed('special')&&p.ink>=5)superAttack(g);
   if(g.type!=='run'){
     const phase=b.hp/b.maxHp>.66?0:b.hp/b.maxHp>.33?1:2;
-    if(phase!==g.phase){g.phase=phase;g.warning='PHASE '+(phase+1)+' — '+BOSSES[g.act].warning[phase];g.warningTime=1.6;g.attackIn=Math.max(g.attackIn,1.7);event(g,'phase');}
+    if(phase!==g.phase){g.phase=phase;g.transition=1.1;g.hazards=[];burst(g,b.x+b.w/2,b.y+b.h/2,'#f6e8c8',35);g.warning='PHASE '+(phase+1)+' — '+BOSSES[g.act].warning[phase];g.warningTime=1.6;g.attackIn=Math.max(g.attackIn,1.7);event(g,'phase');}
     if(g.act===2)b.y=215+Math.sin(g.time*1.8)*65;
     else if(g.type==='flight')b.y=160+Math.sin(g.time*1.25)*95;
     else if(BOSSES[g.act].pattern==='frog')b.y=238-Math.max(0,Math.sin(g.time*2))*60;
     else if(BOSSES[g.act].pattern==='crab')b.x=735+Math.sin(g.time)*60;
     g.attackIn-=dt;g.warningTime=Math.max(0,g.warningTime-dt);
     if(g.attackIn<.65&&g.warningTime<=0){g.warning=BOSSES[g.act].warning[g.phase];g.warningTime=Math.max(.05,g.attackIn);}
-    if(g.attackIn<=0){attack(g);g.attackIn=(2.05-g.phase*.3)*(g.difficulty==='gentle'?1.22:1);}
+    if(g.attackIn<=0&&g.transition<=0){attack(g);g.attackIn=(2.05-g.phase*.3)*(g.difficulty==='gentle'?1.22:1);}
   }
   updateShots(g,dt);
   if(g.type!=='run'&&b.hp<=0){g.mode='victory';g.hazards=[];g.shake=.4;burst(g,b.x+70,b.y+80,'#f6d68d',65);event(g,'victory');g.previous={...input};return;}
