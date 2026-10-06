@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#c9dcff">
+  <meta name="description" content="Ink Relay is a live multiplayer cartoon boss fight. Take turns, send support, and finish the show together.">
+  <title>Ink Relay — A multiplayer picture show</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./relay.css">
+</head>
+<body>
+  <div class="ticker" aria-hidden="true"><div>✦ THE SHOW IS BETTER TOGETHER &nbsp; ✦ TAKE THE STAGE &nbsp; ✦ SEND A LITTLE HELP &nbsp; ✦ THE SHOW IS BETTER TOGETHER &nbsp; ✦ TAKE THE STAGE &nbsp; ✦ SEND A LITTLE HELP &nbsp;</div></div>
+  <div class="shell">
+    <header class="masthead"><a class="brand" href="./relay.html" aria-label="Ink Relay home"><span class="brand-star">✦</span><span>INK<span class="brand-slash">/</span>RELAY</span></a><nav aria-label="Game navigation"><a href="./index.html">SOLO CAMPAIGN ↗</a><button id="help-button" type="button">HOW TO PLAY</button><button id="sound-button" type="button" aria-pressed="false">SOUND OFF</button></nav></header>
+    <main>
+      <div class="main-grid">
+        <section class="intro-panel" aria-labelledby="title"><div class="intro-inner"><p class="kicker"><span class="live-spark"></span> LIVE MULTIPLAYER PICTURE SHOW</p><h1 id="title">INK<span class="slash">/</span><br>RELAY<span class="period">.</span></h1><p class="lede">One boss. One team. The pen passes from player to player while everyone else sends a little magic from the wings.</p>
+          <div id="entry" class="entry"><label for="player-name">FIRST, YOUR STAGE NAME</label><input id="player-name" maxlength="20" autocomplete="nickname" placeholder="What should we call you?">
+            <fieldset class="boss-select"><legend>CHOOSE A HEADLINER</legend><label><input type="radio" name="boss" value="0" checked><span>01 ROOTSY<br><small>THE GARDEN</small></span></label><label><input type="radio" name="boss" value="1"><span>02 BARON<br><small>THE HARBOR</small></span></label><label><input type="radio" name="boss" value="2"><span>03 MOTH<br><small>THE MIDWAY</small></span></label></fieldset>
+            <button id="create-button" class="action-button" type="button">CREATE A ROOM <span>↗</span></button><div class="join-line"><input id="room-input" aria-label="Six-character room code" maxlength="6" placeholder="SIX-LETTER CODE"><button id="join-button" type="button">JOIN →</button></div>
+            <p class="form-note">2–6 players · 35-second turns · no sign-in</p>
+          </div>
+          <div id="room-controls" class="room-controls" hidden><div class="room-code-block"><span>YOUR ROOM CODE</span><strong id="room-code"></strong><button id="copy-button" type="button">COPY INVITE LINK ↗</button></div><p id="room-message"></p><button id="start-button" class="action-button" type="button" hidden>START THE SHOW <span>→</span></button><button id="rematch-button" class="action-button" type="button" hidden>PLAY AGAIN <span>↗</span></button><button id="leave-button" class="quiet-button" type="button">LEAVE ROOM</button></div>
+          <p id="error" class="error" role="alert" aria-live="polite"></p>
+          <div class="intro-foot"><span>01 / JOIN THE CAST</span><span>02 / PASS THE PEN</span><span>03 / BEAT THE BOSS</span></div>
+        </div></section>
+        <section class="play-panel" aria-label="Live game stage"><div class="play-top"><span><i class="live-spark"></i> <b id="play-status">PREVIEW STAGE</b></span><span id="play-timer">INK & TROUBLE</span></div><div class="canvas-wrap"><canvas id="game" width="960" height="540" aria-label="Cartoon boss fight. The active player uses keyboard or touch controls." tabindex="0"></canvas><div id="stage-banner" class="stage-banner"><span>READY WHEN YOU ARE</span><strong>THE SHOW<br>STARTS HERE<span>.</span></strong></div><div class="canvas-corner">I/R <span>✦</span> 2026</div></div><div class="play-bottom"><span id="boss-label">ROOTSY THE RADISH</span><div class="health-meter" aria-label="Boss health"><i id="boss-health"></i></div><span id="health-label">BOSS HEALTH — 100%</span></div></section>
+      </div>
+      <section id="team-section" class="team-section" aria-label="Players and team support"><div class="section-head"><div><p class="kicker">THE CAST</p><h2>EVERYBODY<br>PLAYS A PART<span>.</span></h2></div><p id="team-note">Create a room and invite a friend to begin.</p></div><div id="player-list" class="player-list"></div><div id="support-panel" class="support-panel" hidden><div><span class="support-eyebrow">WATCHING FROM THE WINGS?</span><h3>Send one assist this turn.</h3><p>Help the active player before the pen passes.</p></div><div class="support-actions"><button type="button" data-support="shield"><b>◌</b><span>SHIELD<small>2 SECONDS SAFE</small></span></button><button type="button" data-support="heal"><b>♥</b><span>HEART<small>RESTORE 1 HEART</small></span></button><button type="button" data-support="super"><b>✦</b><span>INK BURST<small>FILL SUPER METER</small></span></button></div><p id="support-status" aria-live="polite"></p></div></section>
+      <div class="touch-controls" aria-label="Touch controls"><div><button data-key="left" aria-label="Move left">←</button><button data-key="right" aria-label="Move right">→</button><button data-key="up" aria-label="Aim up">↑</button><button data-key="down" aria-label="Duck or aim down">↓</button></div><div><button data-key="jump">JUMP</button><button data-key="shoot">FIRE</button><button data-key="dash">DASH</button><button data-key="parry">PARRY</button><button data-key="ex">EX</button><button data-key="special">SUPER</button></div></div>
+      <div class="controls-note"><span>MOVE ← → / A D</span><span>JUMP SPACE</span><span>FIRE Z</span><span>DASH X</span><span>PARRY C</span><span>SUPER V</span></div>
+    </main><footer><span>AN ORIGINAL MULTIPLAYER PICTURE SHOW</span><span>MADE OF INK, NERVE & GOOD COMPANY.</span></footer>
+  </div>
+  <dialog id="rules"><button id="close-rules" class="close-dialog" type="button" aria-label="Close rules">×</button><p class="kicker">THE PLAYBILL</p><h2>How the relay works.</h2><ol><li>Create a room, then share its link or six-character code with one to five friends. Everyone joins from their own device.</li><li>The host starts. Players take 35-second turns fighting the same boss. The boss keeps the damage dealt by every player.</li><li>When it is your turn, move with arrows or A/D, jump with Space, hold Z to fire, dash with X, parry pink shots with C, use EX with F, and use your super with V.</li><li>While watching, choose one assist per turn: a shield, a heart, or a full super meter. The fighter receives it live.</li><li>Defeat the boss within three turns per player to win together. If everyone runs out of turns, the boss wins. The host can start a rematch.</li></ol><p>On a phone, use the buttons below the stage. Landscape gives the best view. Your room is restored when you refresh this device.</p></dialog>
+  <script type="module" src="./relay.js"></script>
+</body></html>

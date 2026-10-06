@@ -4,6 +4,12 @@ An original vintage-cartoon action campaign: **15 stages, three islands, six wea
 
 Travel through Bramble Borough, Brinewater Bay, and Midnight Midway. Follow branching trails on the world map, tackle nine ground bosses and three aerial bosses, and collect coins in three scrolling run-and-gun stages. Each boss escalates through three attack phases.
 
+## Ink Relay multiplayer
+
+The original boss engine now powers **Ink Relay**, a live cooperative game for 2–6 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player.
+
+Play the public version at **https://ink-relay-picture-show.amar12356.chatgpt.site/**. Share a room link or six-character code; no account or installation is needed. The multiplayer entry point is `relay.html`, with `relay.css` and `relay.js`. The hosted room API and D1 migration are preserved under `multiplayer-backend/`; the deployable Sites checkout is in the sibling `Handshake Project/multiplayer-game` directory. Running this repository's static server alone supports the original solo campaign but does not supply the multiplayer API.
+
 ## Play locally
 
 Requires Node.js 22 or newer. No package installation needed.
