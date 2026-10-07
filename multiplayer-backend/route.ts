@@ -70,7 +70,7 @@ export async function POST(request:Request) {
       const name=nameOf(input.name);if(!name)return reply({error:"Enter your name"},400);
       if(room.phase!=="lobby")return reply({error:"This relay has already started"},409);
       const playerToken=crypto.randomUUID();
-      const joined=await retryBusy(()=>d.prepare("INSERT INTO relay_players (token,room_code,name,joined_at,damage) SELECT ?,?,?,?,0 WHERE EXISTS (SELECT 1 FROM relay_rooms WHERE code=? AND phase='lobby') AND (SELECT COUNT(*) FROM relay_players WHERE room_code=?)<6")
+      const joined=await retryBusy(()=>d.prepare("INSERT INTO relay_players (token,room_code,name,joined_at,damage) SELECT ?,?,?,?,0 WHERE EXISTS (SELECT 1 FROM relay_rooms WHERE code=? AND phase='lobby') AND (SELECT COUNT(*) FROM relay_players WHERE room_code=?)<8")
         .bind(playerToken,code,name,now(),code,code).run());
       if(!joined.meta.changes)return reply({error:"This room has started or is full"},409);
       return reply({code,token:playerToken});
@@ -94,7 +94,7 @@ export async function POST(request:Request) {
       if(room.phase!=="lobby")return reply({error:"The relay has already started"},409);
       const count="(SELECT COUNT(*) FROM relay_players WHERE room_code=relay_rooms.code)";
       const scale=`(3.7+1.4*(${count}-2))`;
-      const started=await retryBusy(()=>d.prepare(`UPDATE relay_rooms SET phase='active',boss_hp=ROUND(?*${scale}),boss_max=ROUND(?*${scale}),turn=0,actor_index=0,max_turns=${count}*3,deadline=?,snapshot=NULL WHERE code=? AND phase='lobby' AND ${count} BETWEEN 2 AND 6`)
+      const started=await retryBusy(()=>d.prepare(`UPDATE relay_rooms SET phase='active',boss_hp=ROUND(?*${scale}),boss_max=ROUND(?*${scale}),turn=0,actor_index=0,max_turns=${count}*3,deadline=?,snapshot=NULL WHERE code=? AND phase='lobby' AND ${count} BETWEEN 2 AND 8`)
         .bind(BOSS_HP[room.boss],BOSS_HP[room.boss],now()+TIME,code).run());
       if(!started.meta.changes)return reply({error:"At least two players are needed to start"},409);
       return roomState(code,token);

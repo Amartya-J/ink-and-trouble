@@ -6,7 +6,7 @@ Travel through Bramble Borough, Brinewater Bay, and Midnight Midway. Follow bran
 
 ## Ink Relay multiplayer
 
-The original boss engine now powers **Ink Relay**, a live cooperative game for 2–6 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player. Boss health scales with the cast so the fight usually needs more than one turn.
+The original boss engine now powers **Ink Relay**, a live cooperative game for 2–8 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player. Boss health scales with the cast so the fight usually needs more than one turn.
 
 Play the public version at **https://ink-relay-picture-show.amar12356.chatgpt.site/**. Share a room link or six-character code; no account or installation is needed. The multiplayer entry point is `relay.html`, with `relay.css` and `relay.js`. The hosted room API and D1 migration are preserved under `multiplayer-backend/`; the deployable Sites checkout is in the sibling `Handshake Project/multiplayer-game` directory. Running this repository's static server alone supports the original solo campaign but does not supply the multiplayer API.
 
@@ -88,7 +88,7 @@ npm test       # Engine and campaign tests
 npm run build  # Static site in dist/
 ```
 
-Use `SERVE_DIST=1 npm start` to preview the build. There are no runtime dependencies, external assets, trackers, backend services, or API keys.
+Use `SERVE_DIST=1 npm start` to preview the build. The solo preview has no runtime dependencies, trackers, backend services, or API keys. The hosted Ink Relay uses a room backend for multiplayer synchronization.
 
 - `src/content.js`: worlds, stages, weapons, charms, super definitions.
 - `src/campaign.js`: progression, shop, equipment, save validation and migration.
@@ -109,7 +109,7 @@ Source publication does not activate web hosting. An opt-in deployment workflow 
 
 ## Scope and provenance
 
-This is an expanded original browser game inspired by precision action and vintage animation. It does **not** reproduce Cuphead’s exact levels, characters, music, or assets, and it is not feature-for-feature parity with that commercial game. This release is single-player with keyboard/touch controls; cooperative play and gamepad support are not included. Artwork is procedural vector animation rather than frame-by-frame cel animation.
+This is an expanded original browser game inspired by precision action and vintage animation. It does **not** reproduce Cuphead’s exact levels, characters, music, or assets, and it is not feature-for-feature parity with that commercial game. The solo campaign uses keyboard/touch controls; Ink Relay adds cooperative play for 2–8 people. Gamepad support is not included. Artwork is procedural vector animation rather than frame-by-frame cel animation.
 
 Native controls support keyboard navigation, but visual combat is not screen-reader playable. Automated completion checks establish stage reachability with player invulnerability; broader human difficulty balancing and physical-device testing remain useful.
 
