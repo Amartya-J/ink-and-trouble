@@ -6,7 +6,7 @@ Travel through Bramble Borough, Brinewater Bay, and Midnight Midway. Follow bran
 
 ## Ink Relay multiplayer
 
-The original boss engine now powers **Ink Relay**, a live cooperative game for 2–6 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player.
+The original boss engine now powers **Ink Relay**, a live cooperative game for 2–6 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player. Boss health scales with the cast so the fight usually needs more than one turn.
 
 Play the public version at **https://ink-relay-picture-show.amar12356.chatgpt.site/**. Share a room link or six-character code; no account or installation is needed. The multiplayer entry point is `relay.html`, with `relay.css` and `relay.js`. The hosted room API and D1 migration are preserved under `multiplayer-backend/`; the deployable Sites checkout is in the sibling `Handshake Project/multiplayer-game` directory. Running this repository's static server alone supports the original solo campaign but does not supply the multiplayer API.
 
