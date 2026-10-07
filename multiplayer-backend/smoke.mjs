@@ -72,4 +72,16 @@ for(let i=0;i<8;i++){
   assert.equal(raceRoom.players.length,lateJoin.status===200?3:2);
   assert.equal(raceRoom.maxTurns,raceRoom.players.length*3);
 }
-console.log('Relay smoke test passed: capacity, health balance, snapshots, support, turn order, loss, win, rematch, join/start races.');
+const exitingHost=(await post('create',{name:'Exiting Host',boss:0})).data;
+const newHost=(await post('join',{code:exitingHost.code,name:'Next Host'})).data;
+assert.equal((await post('leave',exitingHost)).status,200);
+let handoff=(await get(newHost)).data;
+assert.equal(handoff.isHost,true);
+assert.equal(handoff.players.length,1);
+const replacement=(await post('join',{code:newHost.code,name:'Replacement'})).data;
+assert.equal((await post('start',newHost)).status,200);
+assert.equal((await post('leave',replacement)).status,409,'active players must keep their room slot');
+const emptyHost=(await post('create',{name:'Empty Host',boss:0})).data;
+assert.equal((await post('leave',emptyHost)).status,200);
+assert.equal((await get(emptyHost)).status,404,'empty rooms should be removed');
+console.log('Relay smoke test passed: capacity, balance, snapshots, assists, turns, outcomes, races, and host handoff.');

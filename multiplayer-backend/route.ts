@@ -77,6 +77,18 @@ export async function POST(request:Request) {
     }
     const players=await playerList(code);const me=players.find(p=>p.token===token);
     if(!me)return reply({error:"This device is not in the room"},403);
+    if(action==="leave"){
+      if(room.phase==="active")return reply({error:"Finish this relay before leaving the cast"},409);
+      const allowed="('lobby','won','lost')";
+      const result=await retryBusy(()=>d.batch([
+        d.prepare(`DELETE FROM relay_supports WHERE player_token=? AND room_code=? AND EXISTS (SELECT 1 FROM relay_rooms WHERE code=? AND phase IN ${allowed})`).bind(token,code,code),
+        d.prepare(`DELETE FROM relay_players WHERE token=? AND room_code=? AND EXISTS (SELECT 1 FROM relay_rooms WHERE code=? AND phase IN ${allowed})`).bind(token,code,code),
+        d.prepare(`UPDATE relay_rooms SET host_token=(SELECT token FROM relay_players WHERE room_code=? ORDER BY joined_at,rowid LIMIT 1) WHERE code=? AND host_token=? AND phase IN ${allowed} AND EXISTS (SELECT 1 FROM relay_players WHERE room_code=?)`).bind(code,code,token,code),
+        d.prepare(`DELETE FROM relay_rooms WHERE code=? AND phase IN ${allowed} AND NOT EXISTS (SELECT 1 FROM relay_players WHERE room_code=?)`).bind(code,code),
+      ]));
+      if(!result[1].meta.changes)return reply({error:"This relay is already underway"},409);
+      return reply({left:true});
+    }
     if(action==="start"){
       if(room.host_token!==token)return reply({error:"Only the host can start"},403);
       if(room.phase!=="lobby")return reply({error:"The relay has already started"},409);
