@@ -1,119 +1,68 @@
-# Ink & Trouble — The Inkwell Isles
+# Ink Relay
 
-An original vintage-cartoon action campaign: **15 stages, three islands, six weapons, and one very determined little pen.**
+**One boss. One team. Pass the pen.** Ink Relay is a cooperative cartoon boss fight for 2–8 people playing together from separate phones or computers. It adapts the original [Ink & Trouble solo campaign](docs/SOLO_CAMPAIGN.md) into a live room game with shared boss health and spectator assists.
 
-Travel through Bramble Borough, Brinewater Bay, and Midnight Midway. Follow branching trails on the world map, tackle nine ground bosses and three aerial bosses, and collect coins in three scrolling run-and-gun stages. Each boss escalates through three attack phases.
+[**Play the public game**](https://ink-relay-picture-show.amar12356.chatgpt.site/ink-relay/relay) · [View the cover screenshot](docs/ink-relay-cover.jpg)
 
-## Ink Relay multiplayer
+![Ink Relay live multiplayer game](docs/ink-relay-cover.jpg)
 
-The original boss engine now powers **Ink Relay**, a live cooperative game for 2–8 people on separate devices. Each player gets a 35-second turn against one shared boss. The other players watch the same fight and can send one shield, heart, or super assist per turn. The team wins by defeating the boss within three turns per player. Boss health scales with the cast so the fight usually needs more than one turn.
+## How to play
 
-Play the public version at **https://ink-relay-picture-show.amar12356.chatgpt.site/**. Share a room link or six-character code; no account or installation is needed. The multiplayer entry point is `relay.html`, with `relay.css` and `relay.js`. The hosted room API and D1 migration are preserved under `multiplayer-backend/`; the deployable Sites checkout is in the sibling `Handshake Project/multiplayer-game` directory. Running this repository's static server alone supports the original solo campaign but does not supply the multiplayer API.
+1. Enter a stage name, choose one of three bosses, and create a room. Share the invite link or six-character code with one to seven friends. No login or installation is required.
+2. The host starts when at least two players have joined. Players take 35-second turns fighting the same boss. Damage carries over between turns, and each player's damage score shows their contribution.
+3. Players waiting in the wings watch the live fight and can send **one** shield, heart, or super-meter assist per turn.
+4. Empty the boss's health bar within **three turns per player** and everyone wins. If the team runs out of turns, the boss wins. The host can start a rematch.
 
-## Play locally
+The game explains these rules on its entry screen and provides a detailed **How to Play** dialog. The boss's health bar, turn timer, active player, room roster, and damage scores update across devices.
 
-Requires Node.js 22 or newer. No package installation needed.
+### Controls
 
-```sh
-npm start
-```
+| Action | Keyboard | Phone or tablet |
+| --- | --- | --- |
+| Move / aim | Arrows or WASD | On-screen arrows |
+| Jump | Space | JUMP |
+| Fire | Hold Z | FIRE |
+| Dash | X | DASH |
+| Parry pink shots | C | PARRY |
+| EX attack | F | EX |
+| Super attack | V | SUPER |
 
-Open **http://localhost:4173**. Select a map node, choose Gentle or Regular, and enter the stage. The two starting weapons are Inkshot and Scatter; you start with four coins to spend at **Ink & Co.**
+Landscape gives the best phone view. Sound is optional, and the interface respects reduced-motion preferences.
 
-## Controls
+## How it works
 
-| Action | Keyboard |
+The active player's browser runs the existing canvas combat engine and sends fight snapshots to a room API. Other players receive the same fight state and send assists that the active player receives during the turn. The server owns room membership, turn order, shared boss health, per-player damage, and outcomes; it rejects late joins and actions from the wrong player. Room state is stored in a Cloudflare D1 database.
+
+| Path | Purpose |
 | --- | --- |
-| Move / fly | Arrow keys or WASD (W/S aim vertically in flight) |
-| Jump | Space; release early for a short hop |
-| Aim up / diagonally | Hold Up or W; combine with Left/Right |
-| Shoot | Hold Z or J; Pressure Pen fires on release |
-| Switch equipped weapon | Q or E |
-| Dash | X or Shift; brief protection and a cooldown |
-| Parry pink projectiles | C or K while airborne, or while flying |
-| Weapon EX attack | F; costs one ink card |
-| Equipped super | V or L; costs five ink cards |
-| Pause | Escape or P |
-| Retry after defeat | R |
-| Map selection | Click a node, or use arrows and Enter |
+| `relay.html`, `relay.css`, `relay.js` | Multiplayer entry screen, responsive layout, controls, and synchronization client |
+| `multiplayer-backend/route.ts` | Hosted `/api/relay` room API |
+| `multiplayer-backend/schema.sql` | D1 room, player, and assist tables |
+| `multiplayer-backend/smoke.mjs` | Multiplayer regression test |
+| `src/` | Shared original combat engine, artwork, audio, and solo campaign code |
+| `docs/SOLO_CAMPAIGN.md` | Full guide to the original 15-stage solo game |
 
-In boss fights, horizontal shots face the boss. In run-and-gun stages they follow your facing direction. Parrying and hitting enemies build ink. Touch devices get simultaneous-action buttons; landscape is recommended. Fullscreen, sound, and reduced-motion controls are available.
+The public version is deployed with ChatGPT Sites. Its deployable Sites wrapper lives in the separate `Handshake Project/multiplayer-game` checkout. This GitHub repository contains the multiplayer client, room API, database schema, and original game engine. Running this repository's static server alone serves the solo campaign; multiplayer requires the room API on the same origin.
 
-## Weapons, equipment, and rewards
+## Develop and verify
 
-Equip **two weapons**, **one charm**, and **one super** in Loadout. Changes apply when entering or restarting a stage; switching with Q/E during a fight swaps the two weapons you brought.
-
-| Weapon | Behavior | Cost |
-| --- | --- | --- |
-| Inkshot | Fast, reliable long-range shots | Starter |
-| Scatter | Five strong close-range pellets | Starter |
-| Firefly | Lower-damage homing sparks | 4 coins |
-| Blot Bomb | Heavy arcing, bouncing ink bombs | 4 coins |
-| Roundabout | Shots reverse and return | 4 coins |
-| Pressure Pen | Hold, charge, and release a heavy blast | 5 coins |
-
-Every weapon also has a distinct one-card EX variant. Charms offer an extra heart with a damage tradeoff, passive ink recharge, or faster dash recovery. The first super is a piercing beam; clearing islands I and II unlocks an invulnerability super and a homing inkstorm.
-
-First clears award **two coins**. Run-and-gun stages contain **five additional coins each**, banked only when you reach the exit. Collected coins and first-clear rewards cannot be farmed by replaying stages or changing difficulty.
-
-Clear the four opening stages on an island to unlock its gate boss. Defeat the gate boss to open the next island. Gentle has six hearts and slower boss projectiles; Regular has three. Either difficulty advances the campaign; grades and times are tracked separately.
-
-## The campaign
-
-| Island | Stage | Type |
-| --- | --- | --- |
-| Bramble Borough | The Root of All Trouble — Rootsy the Radish | Boss |
-| | Bramble Scramble | Run & gun |
-| | Out of the Woods — Tick Tock Timber | Boss |
-| | Clouds of Doubt — Captain Cumulus | Flight |
-| | A Royal Ribbit — King Croak | Gate boss |
-| Brinewater Bay | A Fishy Business — Baron Bubbles | Boss |
-| | Pier Pressure | Run & gun |
-| | Claws for Concern — Clack the Crustacean | Boss |
-| | Flight of the Fancy — Admiral Albatross | Flight |
-| | Deep Sea Encore — Maestro Inktopus | Gate boss |
-| Midnight Midway | The Midnight Flutter — Madame Moth | Boss |
-| | Backlot Dash | Run & gun |
-| | Burning the Midnight Oil — Cinderwick | Boss |
-| | Moonlight Mischief — Luna the Lantern | Flight |
-| | The Final Cut — The Projectionist | Final boss |
-
-Progress, coins, purchases, equipment, and best grades save to this browser. Existing v1 boss scores migrate automatically; the old save is retained. Saves belong to the current browser origin: localhost and a hosted site do not share progress.
-
-## Development
+Requires Node.js 22 or newer. The original campaign runs without installing packages:
 
 ```sh
-npm run check  # Syntax-check all runtime modules
-npm test       # Engine and campaign tests
-npm run build  # Static site in dist/
+npm start       # Solo game at http://localhost:4173
+npm run check   # Syntax checks
+npm test        # Engine and campaign tests
+npm run build   # Solo static bundle in dist/
 ```
 
-Use `SERVE_DIST=1 npm start` to preview the build. The solo preview has no runtime dependencies, trackers, backend services, or API keys. The hosted Ink Relay uses a room backend for multiplayer synchronization.
+To test the relay API, deploy `multiplayer-backend/route.ts` with the D1 schema and serve `relay.html` on the same origin. Then run:
 
-- `src/content.js`: worlds, stages, weapons, charms, super definitions.
-- `src/campaign.js`: progression, shop, equipment, save validation and migration.
-- `src/engine.js`: deterministic combat, flight, platforms, enemies, collisions and grading.
-- `src/art.js`: original animated canvas art and world maps.
-- `src/main.js`: menus, input, fixed-step loop, persistence and HUD.
-- `src/audio.js`: synthesized effects and original melody.
-- [PLAN.md](PLAN.md): milestones and scope.
-- [Testing report](docs/TESTING.md): evidence and verification limits.
+```sh
+RELAY_BASE_URL=https://your-host.example node multiplayer-backend/smoke.mjs
+```
 
-## GitHub Pages
+The smoke test covers eight-player capacity, shared health and damage, assists, turn progression, wins, losses, rematches, concurrent joins, and host handoff. The public deployment was also checked without a sign-in.
 
-Source publication does not activate web hosting. An opt-in deployment workflow is included:
+## Original work and limits
 
-1. In **Settings → Pages**, select **GitHub Actions** as the source.
-2. In **Actions → Publish game to Pages**, run the workflow.
-3. Open the URL reported by the successful deployment.
-
-## Scope and provenance
-
-This is an expanded original browser game inspired by precision action and vintage animation. It does **not** reproduce Cuphead’s exact levels, characters, music, or assets, and it is not feature-for-feature parity with that commercial game. The solo campaign uses keyboard/touch controls; Ink Relay adds cooperative play for 2–8 people. Gamepad support is not included. Artwork is procedural vector animation rather than frame-by-frame cel animation.
-
-Native controls support keyboard navigation, but visual combat is not screen-reader playable. Automated completion checks establish stage reachability with player invulnerability; broader human difficulty balancing and physical-device testing remain useful.
-
-### Precision controls
-Hold Down/S to duck on the ground. Hold Ctrl (AIM on touch) to stop moving and aim in eight directions. Press Jump again in the air to parry pink shots. Boss phase changes clear existing bullets and briefly delay attacks.
-
-Vercel configuration is included: `npm run build`, output `dist`. Deployment awaits account/team access.
+All characters, procedural artwork, sound, and game rules were created for this project. The style draws on vintage cartoons and precision action games without copying commercial characters or assets. The solo campaign remains available alongside Ink Relay. Visual combat currently requires sight; broader screen-reader support and physical-device balance testing are future work.
