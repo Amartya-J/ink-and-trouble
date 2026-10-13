@@ -12,7 +12,7 @@ function cloud(c,x,y,s,fill){c.save();c.translate(x,y);c.scale(s,s);c.beginPath(
 function flower(c,x,y,t){line(c,[[x,y],[x+Math.sin(t)*3,y-30]],'#56704b',3);for(let k=0;k<5;k++){const a=k/5*Math.PI*2;ellipse(c,x+Math.cos(a)*8,y-32+Math.sin(a)*8,6,6,'#dbc37c',ink,1);}ellipse(c,x,y-32,5,5,ink,null);}
 export function background(c,act,t,motion=true){
   const palettes=[['#c7d1b0','#aeba88','#788d62'],['#c0d2c6','#92b5a6','#628f82'],['#454e65','#77758b','#5b5c75']];const [sky,hill,back]=palettes[act];
-  c.fillStyle=sky;c.fillRect(0,0,WIDTH,HEIGHT);
+  const wash=c.createLinearGradient(0,0,0,FLOOR);wash.addColorStop(0,sky);wash.addColorStop(1,hill);c.fillStyle=wash;c.fillRect(0,0,WIDTH,HEIGHT);
   if(act===2){for(let i=0;i<55;i++){const x=(i*173+31)%960,y=(i*87+19)%330;ellipse(c,x,y,1+(i%3)*.6,1+(i%3)*.6,'#ddd7b3',null);}ellipse(c,665,91,46,46,'#ecdbaf',ink,2);ellipse(c,683,81,40,40,sky,null);}
   else {ellipse(c,175,102,51,51,'#e8dba5',null);eyes(c,176,96,.35);curve(c,[164,112],[171,120],[180,120],[185,111],ink,2);for(let i=0;i<5;i++)cloud(c,((i*263+80+(motion?t*4:0))%1250)-140,75+(i%3)*37,.75+(i%2)*.4,act===0?'#e4e1bd':'#dce4ce');}
   for(let i=0;i<7;i++)ellipse(c,i*185-60,365,180,120+(i%3)*35,hill,null);
@@ -32,6 +32,8 @@ export function background(c,act,t,motion=true){
   c.fillStyle=act===0?'#c3af7f':act===1?'#b3a27a':'#98836d';c.fillRect(0,FLOOR,960,92);line(c,[[0,FLOOR],[960,FLOOR]],ink,4);
   for(let i=0;i<22;i++){if(act===0){const x=(i*73)%960;line(c,[[x,FLOOR+16+(i%3)*25],[x+10,FLOOR+18+(i%3)*25]],'#9b895f',2);}else{line(c,[[i*90,FLOOR],[i*90-35,540]],'#716b53',2);}}
   if(act===0)for(let i=0;i<50;i++){const x=i*20;line(c,[[x,FLOOR],[x+3,FLOOR-7-(i%4)*2]],'#65754e',2);}
+  // Warm theatrical light stays behind actors and projectiles.
+  const light=c.createRadialGradient(180,100,20,180,100,420);light.addColorStop(0,'#fff4c222');light.addColorStop(1,'#fff4c200');c.fillStyle=light;c.fillRect(0,0,WIDTH,FLOOR);
   // Fixed grain keeps the image textured without distracting flicker.
   c.fillStyle='#243125';c.globalAlpha=.065;for(let i=0;i<650;i++)c.fillRect((i*139.7)%960,(i*89.3)%540,1,1);c.globalAlpha=1;
 }
