@@ -4,7 +4,7 @@ A cartoon action game about a fountain-pen hero and a cast of troublesome perfor
 
 [Play hosted Ink Relay](https://ink-relay-picture-show.amar12356.chatgpt.site/ink-relay/relay) · [Solo campaign guide](docs/SOLO_CAMPAIGN.md) · [Development plan](PLAN.md)
 
-> The hosted Sites edition has a separate deployment. A push to this repository does not update that site. The current visual redesign is in this source checkout.
+> The illustrated redesign is live at the hosted link above. GitHub stores the source; updating the hosted Sites edition requires a separate deployment.
 
 ## Pick a game
 
